@@ -8,30 +8,30 @@ def fact(fator):
     return int(fatorial)
 
 
-def pessoas(salas, pessoas):
+def pessoas(salas, pessoasqnt):
     saida = [[], []]
     qnt = 0
 
-    for i in range(pessoas + 1):
+    for i in range(pessoasqnt + 1):
 
-        pessoasfact = fact(pessoas)
+        pessoasfact = fact(pessoasqnt)
 
         qntfact = fact(qnt)
 
-        m = fact(pessoas - qnt)
+        m = fact(pessoasqnt - qnt)
 
         if qnt == 0 or qnt == 10:
             comb = 1
         else:
             comb = pessoasfact / (qntfact * m)
 
-        resto = (salas - 1) ** (pessoas - qnt)
+        resto = (salas - 1) ** (pessoasqnt - qnt)
 
-        divisor = salas ** pessoas
+        divisor = salas ** pessoasqnt
 
         probabilidade = (comb * resto) / divisor
 
-        print(f"O número de maneiras de distribuir na sala é de {divisor} maneiras e a probabilidade de ter {qnt} pessoas na sala é de {comb}/{divisor} = {probabilidade}")
+        print(f"O número de maneiras de distribuir na sala é de {divisor} maneiras e a probabilidade de ter {qnt} pessoas na sala é de {comb}/{divisor} = {probabilidade:.6f}%")
         qnt += 1
         saida[0].append(qnt)
         saida[1].append(probabilidade)
@@ -50,7 +50,7 @@ def quantas(qnt, ligacoes):
 
         prob = (quantasFact**4)/(ligFact*((tempFact*fact(qnt-temp))**2))
 
-        print(f"A probabildade do sólido A ter {temp} de temperatura com {ligacoes} ligações é de {prob:.5f}%")
+        print(f"A probabildade do sólido A ter {temp} de temperatura com {ligacoes} ligações é de {prob:.6f}%")
         temp += 1
         saida[0].append(temp)
         saida[1].append(prob)
@@ -72,7 +72,7 @@ def show_quantas(quantasn, ligacoesn):
         labels.append(i)
 
     fig, ax = plt.subplots(figsize=(8.5, 6))
-    bar_container = ax.bar(eixox, eixoy, color='purple')
+    bar_container = ax.bar(eixox, eixoy, color='blue')
     ax.set_xticks(ticks, labels)
     ax.set(ylabel="Probabilidade (%)", title="Distribução de quantas", xlabel="Temperatura", ylim=(0, 0.4))
     ax.bar_label(bar_container, fmt="{:,.5f}%")
@@ -94,7 +94,7 @@ def show_pessoas(salasn, pessoasn):
         labels.append(i)
 
     fig, ax = plt.subplots(figsize=(9, 6))
-    bar_container = ax.bar(eixox, eixoy, color='red')
+    bar_container = ax.bar(eixox, eixoy, color='green')
     ax.set_xticks(ticks, labels)
     ax.set(ylabel="Probabilidade (%)", title="Distribuição das pessoas", xlabel="Pessoas na sala")
     ax.bar_label(bar_container, fmt="{:,.5f}%")
