@@ -1,3 +1,8 @@
+"""
+Deu um pouco de trabalho fazer isso aqui, sei que não era 
+necessário, mas se quiser dar uma ajudinha por isso, eu tô precisando
+"""
+
 import matplotlib.pyplot as plt
 
 def fact(fator):
