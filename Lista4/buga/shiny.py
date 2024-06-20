@@ -24,16 +24,16 @@ def cifra_jogadores(jogador):
     alfabeto = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-    cifrado = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
-               "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "A", "B", "C"]
+    cifrado = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+               'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
     nomecifrado = ""
 
+    for i in range(3):
+        cifrado.append(cifrado.pop(0))
+
     for i in jogador:
-        if i.isupper():
-            nomecifrado += cifrado[alfabeto.index(i.lower())].upper()
-        else:
-            nomecifrado += cifrado[alfabeto.index(i)].lower()
+        nomecifrado += cifrado[alfabeto.index(i.lower())]
 
     idn = 0
 
@@ -43,7 +43,7 @@ def cifra_jogadores(jogador):
     return str(idn)[-1]
 
 
-def cifra_pokemon(criatura, passos):
+def cifra_pokemon(criatura, passos, segundos):
     alfabeto = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
@@ -56,15 +56,14 @@ def cifra_pokemon(criatura, passos):
     nomecifrado = ""
 
     for i in criatura:
-        if i.isupper():
-            nomecifrado += cifrado[alfabeto.index(i.lower())].upper()
-        else:
-            nomecifrado += cifrado[alfabeto.index(i)].lower()
+        nomecifrado += cifrado[alfabeto.index(i.lower())]
 
     idn = 0
 
     for j in nomecifrado:
         idn += ord(j)
+
+    idn = idn * segundos
 
     return str(idn)[-1]
 
@@ -78,7 +77,7 @@ def encontros():
         encontro = encontro.split()
 
         pokemon = encontro[1]
-        tempo = encontro[5]
+        tempo = int(encontro[5])
         passos = int(encontro[8])
         participante = encontro[-1]
 
@@ -89,7 +88,7 @@ def encontros():
         bag = treinadores[3][treinadores[0].index(participante)]
 
         idtreinador = cifra_jogadores(participante)
-        idpokemon = cifra_pokemon(pokemon, passos)
+        idpokemon = cifra_pokemon(pokemon, passos, tempo)
 
         if pokemon == favorito and idtreinador == idpokemon and pokebolas == 1:
             print(f"{participante}: Que sorte! Não apenas achei meu shiny favorito, como também o capturei em minha última pokébola!!!")
@@ -98,16 +97,17 @@ def encontros():
         elif pokemon == favorito and idtreinador == idpokemon and pokebolas > 1:
             print(f"{participante}: Consegui capturar um {favorito} shiny!")
             bag.append(pokemon)
+            treinadores[2][treinadores[0].index(participante)] -= 1
             encontroufavorito = True
-        elif idpokemon == idtreinador:
+        elif idpokemon == idtreinador and pokemon in bag and pokebolas >=1:
+            print(f"{participante}: Achei um {pokemon} shiny, mas não posso desperdiçar pokébolas em um shiny que já tenho...")
+        elif idpokemon == idtreinador and pokemon != favorito and pokebolas >= 1:
             print(f"{participante}: Mais um shiny para a coleção, mas ainda não é um {favorito}")
             bag.append(pokemon)
-            pokebolas -= 1
-        elif idpokemon == idtreinador and pokemon in bag:
-            print(f"{participante}: Achei um {pokemon} shiny, mas não posso desperdiçar pokébolas em um shiny que já tenho...")
-        elif pokemon == favorito:
+            treinadores[2][treinadores[0].index(participante)] -= 1
+        elif pokemon == favorito and pokebolas >= 1:
             print(f"{participante}: Uau, um {favorito}! Pena que não é um shiny...")
-            pokebolas -= 1
+            treinadores[2][treinadores[0].index(participante)] -= 1
         elif idpokemon == idtreinador and pokemon == favorito and pokebolas < 1:
             print(f"{participante}: Só pode ser brincadeira, um {favorito} shiny logo agora?!")
         elif idtreinador == idpokemon and pokebolas < 1:
@@ -119,6 +119,13 @@ def encontros():
         else:
             print(f"{participante}: Ainda não é um {favorito} shiny, tenho que continuar procurando...")
 
+    print()
+    print("---Vamos verificar o que todos encontraram!---")
+    for j in range(len(treinadores[3])):
+        if not treinadores[3][j]:
+            print(f"Coitado, {treinadores[0][j]} não conseguiu capturar um único shiny hoje")
+        else:
+            shinies = ", ".join(treinadores[3][j])
+            print(f"{treinadores[0][j]} capturou os seguintes shinies: {shinies}")
+
 encontros()
-
-
